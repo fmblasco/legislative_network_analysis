@@ -24,16 +24,16 @@ O pipeline dos dados foi construído com foco em reprodutibilidade:
 
 ![Grafo Arcabouço](analysis/figures/co-voting_graph.png)
 
-A topologia gerada pelo algoritmo é "cega" para a ideologia; ela agrupa parlamentares estritamente pelo comportamento. Isso nos permitiu extrair três *insights* fundamentais:
+A topologia gerada pelo algoritmo é alheia a dimensão ideológica, portanto, ela agrupa parlamentares estritamente pelo comportamento. Isso nos permitiu extrair três *insights* fundamentais:
 
 ### 1. Oposição Comportamental
-O **Bloco 1 (Azul)** revelou um fenômeno fascinante: a união tática dos extremos. O algoritmo agrupou a extrema-direita (**PL**, 60,2% do bloco) e a extrema-esquerda (**PSOL**, 10,2%) na mesma comunidade. Embora inimigos ideológicos, ambos votaram para rejeitar a pauta em questão (o PL por oposição sistemática, o PSOL por rejeição ao teto de gastos).
+O **Bloco 1 (Azul)** revelou um fenômeno interessante: a união tática de extremidades. O algoritmo agrupou a direita (**PL**, 60,2% do bloco) e a esquerda (**PSOL**, 10,2%) na mesma comunidade. Embora em diferentes pontas ideológicas, ambos votaram para rejeitar a pauta em questão (o PL por oposição sistemática, o PSOL por rejeição ao teto de gastos).
 
 ### 2. Base Governista
-O **Bloco 3 (Vermelho)** representa a coalizão governista orgânica. Formado esmagadoramente por **PT, PDT e PSB**, é o núcleo duro de apoio operando em alta densidade e sincronia em defesa do projeto original do Ministério da Fazenda.
+O **Bloco 3 (Vermelho)** representa a coalizão governista orgânica. Formado majoritariamente por **PT, PDT e PSB**, é o núcleo duro de apoio operando em alta densidade e sincronia em defesa do projeto original do Ministério da Fazenda.
 
 ### 3. Fisiologia do Centrão
-O grafo demonstra matematicamente que o "Centrão" não operou como um bloco monolítico durante as rodadas de votação do Arcabouço. Eles se dividiram em duas grandes massas de negociação para aprovar emendas específicas:
+O grafo demonstra matematicamente que o "Centrão" (partidos fisiológicos, discutidos amplamente na literatura de comportamento partidário brasileiro) não operou como um bloco monolítico durante as rodadas de votação do Arcabouço. Eles se dividiram em duas grandes massas de negociação para aprovar emendas específicas:
 *   **Bloco 4 (Laranja):** A força motriz liderada pela base de Arthur Lira (**UNIÃO Brasil e PP**).
 *   **Bloco 2 (Verde):** Uma segunda ala pragmática forte, ancorada no **MDB, Republicanos e PSD**.
 
