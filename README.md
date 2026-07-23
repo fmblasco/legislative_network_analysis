@@ -5,16 +5,16 @@
 ![API](https://img.shields.io/badge/Câmara_dos_Deputados-API-green?style=for-the-badge)
 
 ## Sobre o Projeto
-Na intersecção entre a Macroeconomia e a Análise Política, mensurar o risco legislativo de uma pauta complexa exige precisão. Para avaliar a previsibilidade institucional, não basta mapear todos os 513 deputados, é necessário identificar quem são os verdadeiros influenciadores, qual o **custo de transação** das negociações e como os blocos de interesse se comportam na prática, para além de suas legendas partidárias.
+Na intersecção entre a Macroeconomia e a Análise Política, mensurar o risco legislativo de uma pauta complexa exige precisão. Para avaliar a previsibilidade institucional, não basta mapear todos os 513 deputados, é necessário identificar quem são os principais influenciadores, qual o **custo de transação** das negociações e como os blocos de interesse se comportam na prática, para além de suas legendas partidárias.
 
-Este projeto utiliza **Análise de Redes Sociais Computacional** para mapear as redes de influência na Câmara dos Deputados. Como estudo de caso, modelou-se as votações do **Novo Arcabouço Fiscal (PLP 93/2023)**, demonstrando como a matemática pode desmascarar alianças informais, revelar a divisão pragmática do Centrão e identificar os *stakeholders* críticos com poder de travar ou acelerar a principal âncora econômica do país.
+Este projeto utiliza **Análise de Redes Sociais Computacional** para mapear as redes de influência na Câmara dos Deputados. Como estudo de caso, modelou-se as votações do **Novo Arcabouço Fiscal (PLP 93/2023)**, demonstrando como a matemática pode esclarecer alianças informais, revelar a divisão pragmática do Centrão e identificar os *stakeholders* críticos com poder de travar ou acelerar a principal âncora econômica do país.
 
 ## Metodologia e Modelagem
 O pipeline dos dados foi construído com foco em reprodutibilidade:
 1. **Extração:** Raspagem automatizada via API Aberta da Câmara dos Deputados.
-2. **Modelagem Algébrica:** Em vez da simples contagem de votos, aplicou-se o **Índice de Similaridade de Jaccard** para construir a matriz de adjacência, permitindo que o grafo reflita a coesão tática exata entre os parlamentares. Tratamento de abstenções institucionais e ausências, além da aplicação de um *threshold* restrito (0.80+) para eliminar ruídos procedimentais.
+2. **Modelagem Algébrica:** Em vez da simples contagem de votos, aplicou-se o **Índice de Similaridade de Jaccard** para construir a matriz de adjacência, permitindo que o grafo reflita a coesão tática entre os parlamentares. Tratamento de abstenções institucionais e ausências, além da aplicação de um *threshold* restrito (0.80+) para eliminar ruídos procedimentais.
 3. **Inteligência Analítica (Métricas de Rede):**
-   * **Algoritmo Não-Supervisionado:** Uso do Algoritmo de Louvain para detecção de comunidades (bancadas informais).
+   * **Algoritmo Não-Supervisionado (Clustering):** Uso do Algoritmo de Louvain para detecção de comunidades (bancadas informais).
    * **Betweenness Centrality (Intermediação):** Cálculo para elencar os parlamentares-chave que atuam como pontes.
 4. **Visualização:** Renderização topológica via Gephi (*ForceAtlas 2*).
 
