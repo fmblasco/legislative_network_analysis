@@ -1,6 +1,6 @@
 ##############################################################################-
-## Project: Novo Arcabouço Fiscal (PLP 93/2023) - Dados Abertos Câmara
-## Script purpose: Manipulação das bases e matriz bruta de votações (API da Câmara)
+## Project: New Fiscal Framework (Novo Arcabouço Fiscal - PLP 93/2023) - Chamber Open Data
+## Script purpose: Data manipulation and raw voting matrix creation (Chamber API)
 ## Date: JULY 07 2026 ------------------------------
 
 ## Author: Francisco Blasco
@@ -8,9 +8,9 @@
 
 ##  Overview ----
 ##############################################################################-
-# Este script coleta os dados brutos da API da Câmara dos Deputados, extrai 
-# todas as votações nominais referentes ao PLP 93/2023 e pivoteia os votos 
-# em uma matriz binária para análise de redes sociais.
+# This script collects raw data from the Chamber of Deputies API, extracts 
+# all roll-call votes regarding PLP 93/2023, and pivots the votes 
+# into a binary matrix for social network analysis.
 
 ## Packages, Parameters, & Input Data ----
 ##############################################################################-
@@ -29,22 +29,22 @@ conflict_prefer("filter", "dplyr")
 source("file_paths.R")
 
 
-## Loading API Câmara and Getting Proposal ID  ----
+## Loading API Câmara and Getting Proposition ID  ----
 ##############################################################################-
 
 url_prop <- "https://dadosabertos.camara.leg.br/api/v2/proposicoes"
 
-# Preenchimento com informações da proposição
+# Fetching proposition information
 res_prop <- GET(url_prop, query = list(siglaTipo = "PLP", numero = 93, ano = 2023)) 
 
 dados_prop <- fromJSON(content(res_prop, "text", encoding = "UTF-8"))$dados
 
 id_proposicao <- dados_prop |> 
   arrange(dataApresentacao) |> 
-  slice(1) |> # Apenas para garantir que coletamos o ID da proposição raiz
+  slice(1) |> # Just to ensure we collect the root proposition ID
   pull(id)
 
-cat("ID da Proposição encontrado:", id_proposicao, "\n")
+cat("Proposition ID found:", id_proposicao, "\n")
 
 
 ## Gathering all Relevant Votes  ----
@@ -52,7 +52,7 @@ cat("ID da Proposição encontrado:", id_proposicao, "\n")
 
 url_votacoes <- paste0("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_proposicao, "/votacoes")
 
-cat("Buscando votações. Isso pode levar alguns segundos devido à instabilidade da API...\n")
+cat("Fetching votes. This may take a few seconds due to API instability...\n")
 
 res_votacoes <- RETRY("GET", url_votacoes, times = 5, pause_base = 2) 
 
@@ -61,17 +61,17 @@ if (status_code(res_votacoes) == 200) {
   dados_votacoes <- fromJSON(content(res_votacoes, "text", encoding = "UTF-8"))$dados
   ids_votacoes <- dados_votacoes$id 
   
-  cat("Sucesso! Total de votações encontradas para esta proposição:", length(ids_votacoes), "\n")
+  cat("Success! Total roll-call votes found for this proposition:", length(ids_votacoes), "\n")
   
 } else {
-  stop("A API da Câmara não respondeu. Status Code: ", status_code(res_votacoes))
+  stop("Chamber API did not respond. Status Code: ", status_code(res_votacoes))
 }
 
 
 ## Extracting the Individual Votes  ----
 ##############################################################################-
 
-# Função para entrar em cada votação e raspar os votos
+# Function to access each roll-call and scrape the votes
 extrair_votos <- function(id_votacao) {
   url_votos <- paste0("https://dadosabertos.camara.leg.br/api/v2/votacoes/", id_votacao, "/votos")
   res_votos <- GET(url_votos)
@@ -93,7 +93,7 @@ extrair_votos <- function(id_votacao) {
   return(NULL)
 }
 
-# Aplicando a função para empilhar os resultados
+# Applying the function to bind the results
 df_longo_votos <- map_dfr(ids_votacoes, function(id) {
   Sys.sleep(0.5)
   extrair_votos(id)
@@ -107,10 +107,10 @@ df_matriz <- df_longo_votos |>
   mutate(voto_binario = case_when(
     voto_texto == "Sim" ~ 1,
     
-    # Votos considerados como posição de rejeição à matéria
+    # Votes considered as a rejection of the matter
     voto_texto %in% c("Não", "Abstenção", "Obstrução") ~ 0, 
     
-    # Abstenção institucional convertida em NA para cálculo matemático isolado
+    # Institutional abstention converted to NA for isolated mathematical calculation
     voto_texto == "Artigo 17" ~ NA_real_, 
     
     TRUE ~ NA_real_ 
@@ -118,7 +118,7 @@ df_matriz <- df_longo_votos |>
   select(-voto_texto) |> 
   distinct(deputado, partido, uf, id_votacao, .keep_all = TRUE) |>
   
-  # Pivoteamento da base para estrutura matricial (Deputados x Votações)
+  # Pivoting the dataframe to a matrix structure (Deputies x Votes)
   pivot_wider(
     names_from = id_votacao,
     names_prefix = "voto_",
@@ -131,5 +131,5 @@ df_matriz <- df_longo_votos |>
 
 write_excel_csv(df_matriz, fs::path(path_data_root, "matriz_votacoes_plp93.csv"))
 
-cat("Processo finalizado com sucesso! Matriz salva localmente.\n")
+cat("Process successfully finished! Matrix saved locally.\n")
 
