@@ -24,7 +24,7 @@ O pipeline dos dados foi construído com foco em reprodutibilidade:
 
 ![Grafo Arcabouço](analysis/figures/co-voting_graph.png)
 
-A topologia gerada pelo algoritmo é alheia a dimensão ideológica, portanto, ela agrupa parlamentares estritamente pelo comportamento. Isso nos permitiu extrair três *insights* fundamentais:
+A topologia gerada pelo algoritmo é alheia à dimensão ideológica, portanto, ela agrupa parlamentares estritamente pelo comportamento. Isso nos permitiu extrair três *insights* fundamentais:
 
 ### 1. Oposição Comportamental
 O **Bloco 1 (Azul)** revelou um fenômeno interessante: a união tática de extremidades. O algoritmo agrupou a direita (**PL**, 60,2% do bloco) e a esquerda (**PSOL**, 10,2%) na mesma comunidade. Embora em diferentes pontas ideológicas, ambos votaram para rejeitar a pauta em questão (o PL por oposição sistemática, o PSOL por rejeição ao teto de gastos).
@@ -110,7 +110,7 @@ legislative_network_analysis/
 ├── gephi_workspaces/      
 │   └── Network_Gephi.gephi               # Workspace com a topologia final modelada (basta abrir diretamente no software Gephi)
 ├── script/                
-│   ├── 01_building_data_bases.R          # Extração via API, tratamento e matriz two-mode
+│   ├── 01_modeling_data_bases.R          # Extração via API, tratamento e matriz two-mode
 │   └── 02_modeling_networks.R            # Matriz de adjacência, algoritmos de rede (igraph)
 ├── file_paths.R                          # Gerenciamento dinâmico de diretórios locais
 ├── legislative_network_analysis.Rproj    # Arquivo principal do ambiente RStudio
