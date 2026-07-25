@@ -20,7 +20,7 @@ O pipeline dos dados foi construído com foco em reprodutibilidade:
 
 ---
 
-## Data Storytelling: Decifrando o Arcabouço Fiscal
+## Data Storytelling: Interpretando o Arcabouço Fiscal
 
 ![Grafo Arcabouço](analysis/figures/co-voting_graph.png)
 
@@ -40,9 +40,14 @@ O grafo demonstra matematicamente que o "Centrão" (partidos fisiológicos, disc
 ---
 
 ## Resultados Analíticos do Mapeamento
-A métrica de *Betweenness Centrality* (Grau de Articulação) nos auxilia ao indicar os deputados que transitam entre blocos rivais e detêm o poder de travar ou acelerar negociações na rede.
 
-**Top 10 Articuladores (Pontes entre Blocos):**
+A métrica de *Betweenness Centrality* (Grau de Articulação) nos auxilia a identificar os stakeholders ocultos da rede.
+
+> Na literatura institucional clássica, o "tomador de decisão" é geralmente aquele que detém o poder formal de pauta (como a Presidência da Casa). No entanto, a Teoria dos Grafos nos permite mapear uma outra camada: os **brokers**, em outras palavras, os **mediadores estratégicos**. 
+>
+> São deputados que não necessariamente ocupam lideranças oficiais ou aparecem nos jornais todo dia, mas que matematicamente controlam o fluxo de informação e negociação entre blocos rivais. Ao atuarem como 'pontes' (gargalos da rede), se tornam atores que detêm o poder prático de destravar ou travar a formação de maiorias.
+
+#### Top 10 Articuladores (Brokers entre Blocos):
 
 |Deputado            |Partido      |UF | Grau de Articulação| Bloco Informal|
 |:-------------------|:------------|:--|-------------------:|--------------:|
@@ -57,7 +62,9 @@ A métrica de *Betweenness Centrality* (Grau de Articulação) nos auxilia ao in
 |Zé Vitor            |PL           |MG |              0.0249|              3|
 |Messias Donato      |REPUBLICANOS |ES |              0.0215|              1|
 
-**Tamanho das Bancadas (Comunidades):**
+#### Dimensionamento das Bancadas (Comunidades):
+
+Para entender o peso e a proporção de cada grupo na negociação, o algoritmo agrupou o plenário nas seguintes densidades comportamentais:
 
 | Bloco Informal| Total de Deputados|
 |--------------:|------------------:|
@@ -66,7 +73,9 @@ A métrica de *Betweenness Centrality* (Grau de Articulação) nos auxilia ao in
 |              3|                132|
 |              1|                128|
 
-**Composição Partidária dos Blocos:**
+#### Composição Partidária (Análise interna dos Blocos):
+
+Desagregando as comunidades, podemos visualizar as alianças tranversais entre partidos:
 
 | Bloco Informal|Partido      | Qtd Deputados| Peso no Bloco (%)|
 |--------------:|:------------|-------------:|-----------------:|
@@ -87,6 +96,39 @@ A métrica de *Betweenness Centrality* (Grau de Articulação) nos auxilia ao in
 |              4|PL           |            17|              12.3|
 |              4|PSD          |             8|               5.8|
 
+
+## 💻 Estrutura do Projeto e Reprodutibilidade
+
+O repositório está organizado da seguinte forma para garantir o acompanhamento da análise e a transparência do código:
+
+```text
+legislative_network_analysis/
+├── analysis/                             # Resultados exportados da modelagem
+│   ├── figures/                          # Visualização gerada (grafo)
+│   └── tables/                           # Tabelas consolidadas com métricas e blocos
+├── data/                                 # Diretório para armazenamento das bases brutas e tratadas
+├── gephi_workspaces/      
+│   └── Network_Gephi.gephi               # Workspace com a topologia final modelada (basta abrir diretamente no software Gephi)
+├── script/                
+│   ├── 01_building_data_bases.R          # Extração via API, tratamento e matriz two-mode
+│   └── 02_modeling_networks.R            # Matriz de adjacência, algoritmos de rede (igraph)
+├── file_paths.R                          # Gerenciamento dinâmico de diretórios locais
+├── legislative_network_analysis.Rproj    # Arquivo principal do ambiente RStudio
+└── README.md                             # Documentação analítica
+```
+
+Para reproduzir a análise, basta clonar o repositório e abrir o projeto no RStudio através do arquivo `legislative_network_analysis.Rproj`. Antes de rodar os scripts, certifique-se de ter os pacotes necessários. Você pode executar o bloco abaixo no seu console do R para verificar e instalar automaticamente apenas o que estiver faltando no seu ambiente:
+
+```R
+# Lista de dependências exatas do projeto
+pacotes <- c("conflicted", "httr", "jsonlite", "dplyr", "tidyr", 
+             "purrr", "readr", "tibble", "igraph", "knitr")
+
+# Verificando
+pacotes_faltantes <- pacotes[!(pacotes %in% installed.packages()[,"Package"])]
+if(length(pacotes_faltantes)) install.packages(pacotes_faltantes)
+lapply(pacotes, library, character.only = TRUE)
+```
 
 ---
 
